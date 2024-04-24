@@ -3,8 +3,17 @@
 	"EngineAssociation": "5.3",
 	"Category": "",
 	"Description": "",
-	"TargetPlatforms":
-	[
+	"Modules": [
+		{
+			"Name": "DungeonDefiler",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
+	"TargetPlatforms": [
 		"Windows"
 	]
 }
