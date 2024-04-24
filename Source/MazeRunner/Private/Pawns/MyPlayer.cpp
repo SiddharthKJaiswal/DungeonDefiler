@@ -74,18 +74,18 @@ void AMyPlayer::AddAbility_Hide(const bool Begin)
 		IsHiding = true;
 		HideTimeLeft = 5.0f;
 
-		MeshArms->SetMaterial(0, InvisibleArmMat);
+		/*MeshArms->SetMaterial(0, InvisibleArmMat);
 		MeshArms->SetMaterial(1, InvisibleArmMat);
 
-		MeshGun->SetMaterial(0, InvisibleGunMat);
+		MeshGun->SetMaterial(0, InvisibleGunMat);*/
 	}
 	else
 	{
 		IsHiding = false;
 		HideTimeLeft = 0.0f;
-		MeshArms->SetMaterial(0, DefaultArmMat1);
+		/*MeshArms->SetMaterial(0, DefaultArmMat1);
 		MeshArms->SetMaterial(1, DefaultArmMat2);
 
-		MeshGun->SetMaterial(0, DefaultGunMat);
+		MeshGun->SetMaterial(0, DefaultGunMat);*/
 	}
 }
