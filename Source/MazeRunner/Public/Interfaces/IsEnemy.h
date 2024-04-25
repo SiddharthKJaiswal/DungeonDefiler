@@ -17,5 +17,5 @@ class MAZERUNNER_API IIsEnemy
 	GENERATED_BODY()
 
 public:
-	virtual void KillEnemy() = 0;
+	virtual void EnemyDeath() = 0;
 };

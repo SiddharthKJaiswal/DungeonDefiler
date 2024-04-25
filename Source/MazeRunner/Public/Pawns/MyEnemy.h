@@ -7,9 +7,11 @@
 #include "Interfaces/IsEnemy.h"
 #include "MyEnemy.generated.h"
 
+#pragma region ForwardDeclarations
 class UBoxComponent;
 class AAIController;
 class UPawnSensingComponent;
+#pragma endregion
 
 UCLASS()
 class MAZERUNNER_API AMyEnemy : public ACharacter, public IIsEnemy
@@ -27,16 +29,15 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "_My|Enemy")
 	TObjectPtr<UPawnSensingComponent> PawnSensingComponent = nullptr;
-
 #pragma endregion
-
+	
 #pragma region Functions
 
 public:
 	AMyEnemy();
 
 	UFUNCTION(BlueprintCallable, Category = "_My|NPC")
-	virtual void KillEnemy() override;
+	virtual void EnemyDeath() override;
 
 protected:
 	virtual void BeginPlay() override;

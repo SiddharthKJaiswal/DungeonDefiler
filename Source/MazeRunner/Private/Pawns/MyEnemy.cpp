@@ -21,7 +21,7 @@ AMyEnemy::AMyEnemy()
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
 	PawnSensingComponent->SensingInterval = 0.25f;
 	PawnSensingComponent->SetPeripheralVisionAngle(60.0f);
-	PawnSensingComponent->SightRadius = 1250.0f;
+	PawnSensingComponent->SightRadius = 2250.0f;
 	PawnSensingComponent->HearingThreshold = 350.0f;
 	PawnSensingComponent->LOSHearingThreshold = 700.0f;
 
@@ -54,13 +54,13 @@ void AMyEnemy::OnBeginOverlap_KillBox(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (IIsPlayer* PlayerPawn = Cast<IIsPlayer>(OtherActor))
 	{
-		PlayerPawn->KillPlayer();
+		PlayerPawn->PlayerDeath();
 	}
 }
 
 void AMyEnemy::OnSeePawn_PawnSensingComponent(APawn* Pawn)
 {
-	if (Cast<AMyPlayer>(Pawn)->IsHiding)
+	if (Cast<AMyPlayer>(Pawn)->Get_IsHiding())
 	{
 		Reference_AIController->StopMovement();
 		return;
@@ -72,7 +72,7 @@ void AMyEnemy::OnHearNoise_PawnSensingComponent(APawn* Pawn, const FVector& Loca
 {
 }
 
-void AMyEnemy::KillEnemy()
+void AMyEnemy::EnemyDeath()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);

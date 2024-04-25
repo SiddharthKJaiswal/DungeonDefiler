@@ -17,10 +17,11 @@ class MAZERUNNER_API IIsPlayer
 	GENERATED_BODY()
 
 public:
-	virtual void KillPlayer() = 0;
-	
+	virtual void PlayerDeath() = 0;
+	virtual void EnemyDeath() = 0;
+
 	virtual void AddCollectable_Coin() = 0;
-	
+
 	virtual void AddAbility_Flight(bool Begin) = 0;
 	virtual void AddAbility_Hide(bool Begin) = 0;
 };

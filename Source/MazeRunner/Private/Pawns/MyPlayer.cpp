@@ -1,15 +1,22 @@
 ﻿// Copyright Siddharth Jaiswal
 
 #include "Pawns/MyPlayer.h"
+#include "Player/MyHUD.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 AMyPlayer::AMyPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+}
+
+void AMyPlayer::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	Reference_HUD = Cast<AMyHUD>(Cast<APlayerController>(GetController())->GetHUD());
 }
 
 void AMyPlayer::Tick(float DeltaSeconds)
@@ -24,6 +31,10 @@ void AMyPlayer::Tick(float DeltaSeconds)
 		{
 			AddAbility_Flight(false);
 		}
+		if (Reference_HUD)
+		{
+			Reference_HUD->UpdatePlayerData(2, FlightTimeLeft);
+		}
 	}
 	if (IsHiding)
 	{
@@ -32,21 +43,32 @@ void AMyPlayer::Tick(float DeltaSeconds)
 		{
 			AddAbility_Hide(false);
 		}
+		if (Reference_HUD)
+		{
+			Reference_HUD->UpdatePlayerData(3, HideTimeLeft);
+		}
 	}
 }
 
-void AMyPlayer::KillPlayer()
+void AMyPlayer::PlayerDeath()
 {
 	if (IsHiding || IsFlying)
 	{
 		return;
 	}
-	UKismetSystemLibrary::PrintString(GetWorld(), "Begun Overlap With Player Pawn");
+	Reference_HUD->UpdatePlayerDeath();
+}
+
+void AMyPlayer::EnemyDeath()
+{
+	EnemiesKilled++;
+	Reference_HUD->UpdatePlayerData(1, static_cast<float>(EnemiesKilled));
 }
 
 void AMyPlayer::AddCollectable_Coin()
 {
 	Coins++;
+	Reference_HUD->UpdatePlayerData(0, static_cast<float>(Coins));
 }
 
 void AMyPlayer::AddAbility_Flight(const bool Begin)
@@ -57,6 +79,7 @@ void AMyPlayer::AddAbility_Flight(const bool Begin)
 		FlightTimeLeft = 5.0f;
 		GetCharacterMovement()->GravityScale = -1.0f;
 		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		Reference_HUD->UpdatePlayerData(2, FlightTimeLeft);
 	}
 	else
 	{
@@ -64,6 +87,7 @@ void AMyPlayer::AddAbility_Flight(const bool Begin)
 		FlightTimeLeft = 0.0f;
 		GetCharacterMovement()->GravityScale = 1.0f;
 		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		Reference_HUD->UpdatePlayerData(2, FlightTimeLeft);
 	}
 }
 
@@ -73,19 +97,14 @@ void AMyPlayer::AddAbility_Hide(const bool Begin)
 	{
 		IsHiding = true;
 		HideTimeLeft = 5.0f;
-
-		/*MeshArms->SetMaterial(0, InvisibleArmMat);
-		MeshArms->SetMaterial(1, InvisibleArmMat);
-
-		MeshGun->SetMaterial(0, InvisibleGunMat);*/
+		Reference_HUD->UpdatePlayerData(3, HideTimeLeft);
+		//Set Mesh To Invisible
 	}
 	else
 	{
 		IsHiding = false;
 		HideTimeLeft = 0.0f;
-		/*MeshArms->SetMaterial(0, DefaultArmMat1);
-		MeshArms->SetMaterial(1, DefaultArmMat2);
-
-		MeshGun->SetMaterial(0, DefaultGunMat);*/
+		Reference_HUD->UpdatePlayerData(3, HideTimeLeft);
+		//Set Mesh To Visible
 	}
 }
